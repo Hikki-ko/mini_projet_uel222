@@ -5,7 +5,7 @@
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}{{ importmap('app') }}{% endblock %}
     </head>
-    <body>
+    <body data-bs-theme="dark">
     {% include './partials/navbar.html.twig' %}
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
