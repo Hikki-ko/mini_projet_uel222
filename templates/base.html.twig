@@ -3,11 +3,13 @@
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        {% block stylesheets %}{{ importmap('app') }}{% endblock %}
     </head>
     <body>
+    {% include './partials/navbar.html.twig' %}
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
+            
     </body>
 </html>
