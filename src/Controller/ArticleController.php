@@ -22,6 +22,14 @@ class ArticleController extends AbstractController
         ]);
     }
 
+    #[Route('/timeline', name: 'article_timeline', methods: ['GET'])]
+    public function timeline(ArticleRepository $articleRepository): Response
+    {
+        return $this->render('article/timeline.html.twig', [
+            'articles' => $articleRepository->findAll(),
+        ]);
+    }
+
     #[Route('/new', name: 'article_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
