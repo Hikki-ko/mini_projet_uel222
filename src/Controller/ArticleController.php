@@ -14,18 +14,19 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/article')]
 class ArticleController extends AbstractController
 {
-    #[Route('/', name: 'article_index', methods: ['GET'])]
-    public function index(ArticleRepository $articleRepository): Response
+
+    #[Route('/', name: 'article_timeline', methods: ['GET'])]
+    public function timeline(ArticleRepository $articleRepository): Response
     {
-        return $this->render('article/index.html.twig', [
+        return $this->render('article/timeline.html.twig', [
             'articles' => $articleRepository->findAll(),
         ]);
     }
 
-    #[Route('/timeline', name: 'article_timeline', methods: ['GET'])]
-    public function timeline(ArticleRepository $articleRepository): Response
+    #[Route('/list', name: 'article_index', methods: ['GET'])]
+    public function index(ArticleRepository $articleRepository): Response
     {
-        return $this->render('article/timeline.html.twig', [
+        return $this->render('article/index.html.twig', [
             'articles' => $articleRepository->findAll(),
         ]);
     }
