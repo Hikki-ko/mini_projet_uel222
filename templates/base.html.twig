@@ -6,6 +6,15 @@
         {% block stylesheets %}{{ importmap('app') }}{% endblock %}
     </head>
     <body data-bs-theme="dark">
+
+    {% for message in app.flashes('error') %}
+
+    <div style="background: #B94A48 ; color: white ; padding: 10px;">
+        {{ message }}
+    </div>
+
+    {% endfor %}
+
     {% include './partials/navbar.html.twig' %}
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}

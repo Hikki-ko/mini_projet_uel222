@@ -10,6 +10,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\User;
+
 
 #[Route('/article')]
 class ArticleController extends AbstractController
@@ -56,12 +58,21 @@ class ArticleController extends AbstractController
     {
         return $this->render('article/show.html.twig', [
             'article' => $article,
+            'isFollowing' => $this->getUser()->isFollowing($article->getAuthor())
+
         ]);
     }
 
     #[Route('/{id}/edit', name: 'article_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Article $article, EntityManagerInterface $entityManager): Response
     {
+       // $this->denyAccessUnlessGranted('EDIT', $article); //
+       if (!$this->isGranted('EDIT', $article)) {
+        $this->addFlash('error', 'Vous ne pouvez pas modifier cet article !');
+        return $this->redirectToRoute('blog');
+
+        }
+
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
@@ -86,5 +97,29 @@ class ArticleController extends AbstractController
         }
 
         return $this->redirectToRoute('article_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/user/{id}/follow', name: 'user_follow', methods: ['GET', 'POST'])]
+    public function follow(User $user, Request $request, EntityManagerInterface $entityManager): Response
+    {
+
+    /** @var User $currentUser */
+    $currentUser = $this->getUser();
+    $currentUser->follow($user);
+    $entityManager->flush();
+
+    return $this->redirect($request->headers->get('referer'));
+    }
+
+    #[Route('/user/{id}/unfollow', name: 'user_unfollow', methods: ['GET', 'POST'])]
+    public function unfollow(User $user, Request $request, EntityManagerInterface $entityManager): Response
+    {
+
+    /** @var User $currentUser */
+    $currentUser = $this->getUser();
+    $currentUser->unfollow($user);
+    $entityManager->flush();
+    
+    return $this->redirect($request->headers->get('referer'));
     }
 }

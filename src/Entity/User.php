@@ -43,9 +43,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Article::class)]
     private Collection $articles;
 
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\ManyToMany(targetEntity: User::class)]
+    #[ORM\JoinTable(name: 'user_follows')]
+    private Collection $following;
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
+        $this->following = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -151,5 +159,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getFollowing(): Collection
+    {
+        return $this->following;
+    }
+
+    public function follow(User $user): static
+    {
+
+        if (!$this->following->contains($user)) {
+            $this->following->add($user);
+        }
+
+        return $this;
+    }
+
+    public function unfollow(User $user): static
+    {
+        $this->following->removeElement($user);
+
+        return $this;
+    }
+    
+    public function isFollowing(User $user): bool
+    {
+        return $this->following->contains($user);
     }
 }

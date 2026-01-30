@@ -32,7 +32,23 @@
 
     <a href="{{ path('article_index') }}">back to list</a>
 
+{% if is_granted('EDIT', article) %}
     <a href="{{ path('article_edit', {'id': article.id}) }}">edit</a>
+{% endif %}
 
+{% if is_granted('DELETE', article) %}
     {{ include('article/_delete_form.html.twig') }}
+{% endif %}
+
+{% if app.user %}
+    {% if article.author.id != app.user.id %}
+        {% if isFollowing %}
+                <a href="{{ path('user_unfollow', {'id': article.author.id}) }}">Ne plus suivre</a>
+            {% else %}
+                <a href="{{ path('user_follow', {'id': article.author.id}) }}">Suivre</a>
+        {% endif %}
+    {% endif %}
+{% endif %}
+
+
 {% endblock %}
