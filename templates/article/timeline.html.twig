@@ -17,6 +17,7 @@
     </h6>
     <p class="card-text">{{ article.content }}</p>
     <a href="{{ path('article_show', {'id': article.id}) }}" class="card-link">Voir plus</a>
+    <span>Par : {{ article.author.username ?? 'Anonyme' }}</span>
       </div>
       </div>
   {% endfor %}

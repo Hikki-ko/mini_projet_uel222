@@ -22,35 +22,43 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         // --- 1. CREATION DES UTILISATEURS ---
+        $users = [];
 
         // Compte Admin
         $admin = new User();
         $admin->setUsername('admin');
         $admin->setRoles(['ROLE_ADMIN']);
-        $password = $this->hasher->hashPassword($admin, 'admin1234');
-        $admin->setPassword($password);
+        $admin->setPassword($this->hasher->hashPassword($admin, 'admin1234'));
         $manager->persist($admin);
+        $users[]=$admin;
 
         // Compte Alexandre
-        $user = new User();
-        $user->setUsername('alexandre');
-        $user->setRoles(['ROLE_USER']);
-        $user->setPassword($this->hasher->hashPassword($user, 'motdepasse'));
-        $manager->persist($user);
+        $user_alexandre = new User();
+        $user_alexandre->setUsername('alexandre');
+        $user_alexandre->setRoles(['ROLE_USER']);
+        $user_alexandre->setPassword($this->hasher->hashPassword($user_alexandre, 'motdepasse'));
+        $manager->persist($user_alexandre);
+        $users[]=$user_alexandre;
 
         // Compte Candice
-        $user = new User();
-        $user->setUsername('candice');
-        $user->setRoles(['ROLE_USER']);
-        $user->setPassword($this->hasher->hashPassword($user, 'plop123'));
-        $manager->persist($user);
+        $user_candice = new User();
+        $user_candice->setUsername('candice');
+        $user_candice->setRoles(['ROLE_USER']);
+        $user_candice->setPassword($this->hasher->hashPassword($user_candice, 'plop123'));
+        $manager->persist($user_candice);
+        $users[]=$user_candice;
 
         // Compte Yanel
-        $user = new User();
-        $user->setUsername('yanel');
-        $user->setRoles(['ROLE_USER']);
-        $user->setPassword($this->hasher->hashPassword($user, 'nimportequoi'));
-        $manager->persist($user);
+        $user_yanel = new User();
+        $user_yanel->setUsername('yanel');
+        $user_yanel->setRoles(['ROLE_USER']);
+        $user_yanel->setPassword($this->hasher->hashPassword($user_yanel, 'nimportequoi'));
+        $manager->persist($user_yanel);
+        $users[]=$user_yanel;
+
+        $manager->flush();
+
+     
 
          // --- 2. CREATION DES CATEGORIES ---
          $some_categories=['Jeux-vidéos', 'Développement web', 'Voyage', 'Technologie'];
@@ -80,15 +88,19 @@ class AppFixtures extends Fixture
             'Licks your face. Chew master\'s slippers. Purr like a car engine oh yes, there is my human slave woman she does best pats ever that all i like about her hiss meow why use post when this sofa is here meeeeouw instantly break out into full speed gallop across the house for no reason. Russian blue. Sleep on keyboard thug cat for lick arm hair or lasers are tiny mice. Destroy house in 5 seconds eat the fat cats food rub butt on table. Eat a rug and furry furry hairs everywhere oh no human coming lie on counter don\'t get off counter meow if it fits, i sits chew foot. Claws in your leg chase the pig around the house groom yourself 4 hours - checked, have your beauty sleep 18 hours - checked, be fabulous for the rest of the day - checked, for get poop stuck in paws jumping out of litter box and run around the house scream meowing and smearing hot cat mud all over. Whatever paw your face to wake you up in the morning yet more napping, more napping all the napping is exhausting chirp at birds, chill on the couch table but hate dog, and cats secretly make all the worlds muffins.'];
 
 
+
         for ($i = 1; $i <= 15; $i++) {
             $randomTitle = $some_titles[array_rand($some_titles)];
             $randomContent = $some_contents[array_rand($some_contents)];
+            $randomUser = $users[array_rand($users)];
+
+            //  dump($randomUser);
 
         $article = new Article();
         $article->setTitle($randomTitle)
-                ->setContent($randomContent);
-
-        $article->setCategory($categories[array_rand($categories)]);
+                ->setContent($randomContent)
+                ->setAuthor($randomUser)
+                ->setCategory($categories[array_rand($categories)]);
 
         $manager->persist($article);
     }
