@@ -47,4 +47,24 @@ class ArticleRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findByFilters(?int $categoryId, ?int $authorId): array
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->leftJoin('a.Category', 'c') // <- attention à la casse
+            ->leftJoin('a.author', 'u')
+            ->addSelect('c', 'u')
+            ->orderBy('a.id', 'DESC');
+
+        if ($categoryId) {
+            $qb->andWhere('c.id = :category')
+            ->setParameter('category', $categoryId);
+        }
+
+        if ($authorId) {
+            $qb->andWhere('u.id = :author')
+            ->setParameter('author', $authorId);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }
