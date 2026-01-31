@@ -4,41 +4,6 @@
 
 {% block body %}
     <h1>Derniers articles</h1>
-    <hr>
-
-    <form method="get" class="row g-3 align-items-end mb-4">
-        <div class="col-md-4">
-            <label for="author" class="form-label">Auteur</label>
-            <select id="author" name="author" class="form-select">
-                <option value="">Tous les auteurs</option>
-                {% for author in authors %}
-                    <option value="{{ author.id }}"
-                        {{ author.id == app.request.get('author') ? 'selected' : '' }}>
-                        {{ author.username }}
-                    </option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="col-md-4">
-            <label for="category" class="form-label">Catégorie</label>
-            <select id="category" name="category" class="form-select">
-                <option value="">Toutes les catégories</option>
-                {% for category in categories %}
-                    <option value="{{ category.id }}"
-                        {{ category.id == app.request.get('category') ? 'selected' : '' }}>
-                        {{ category.name }}
-                    </option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="col-md-4 d-grid">
-            <button type="submit" class="btn btn-primary">Filtrer</button>
-        </div>
-    </form>
-
-    <hr>
 
     <table class="table">
         <thead>
