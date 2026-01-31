@@ -17,19 +17,45 @@ use App\Entity\User;
 class ArticleController extends AbstractController
 {
 
-    #[Route('/', name: 'article_timeline', methods: ['GET'])]
-    public function timeline(ArticleRepository $articleRepository): Response
+    private function getFilteredArticles(Request $request, ArticleRepository $articleRepository)
     {
+        $categoryId = $request->query->getInt('category') ?: null;
+        $authorId   = $request->query->getInt('author') ?: null;
+
+        return $articleRepository->findByFilters($categoryId, $authorId);
+    }
+
+    
+    #[Route('/', name: 'article_timeline', methods: ['GET'])]
+    public function timeline(
+        Request $request,
+        ArticleRepository $articleRepository,
+        CategoryRepository $categoryRepository,
+        UserRepository $userRepository
+    ): Response {
+        $articles = $this->getFilteredArticles($request, $articleRepository);
+
         return $this->render('article/timeline.html.twig', [
-            'articles' => $articleRepository->findAll(),
+            'articles'   => $articles,
+            'categories' => $categoryRepository->findAll(),
+            'authors'    => $userRepository->findAll(),
         ]);
     }
 
+    
     #[Route('/list', name: 'article_index', methods: ['GET'])]
-    public function index(ArticleRepository $articleRepository): Response
-    {
+    public function index(
+        Request $request,
+        ArticleRepository $articleRepository,
+        CategoryRepository $categoryRepository,
+        UserRepository $userRepository
+    ): Response {
+        $articles = $this->getFilteredArticles($request, $articleRepository);
+
         return $this->render('article/index.html.twig', [
-            'articles' => $articleRepository->findAll(),
+            'articles'   => $articles,
+            'categories' => $categoryRepository->findAll(),
+            'authors'    => $userRepository->findAll(),
         ]);
     }
 
